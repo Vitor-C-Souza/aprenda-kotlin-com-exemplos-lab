@@ -1,15 +1,15 @@
-// [Template no Kotlin Playground](https://pl.kotl.in/xdz1mVQMW)
+// [Template no Kotlin Playground](https://pl.kotl.in/Z54hX4BQ1)
 
 enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL, INEXISTENTE }
 
 data class Usuario(val nome: String? = null){
-    fun getUsuario(){
+    fun getUsuario(){															//Retorna um usuario
         println(nome)
     }
 }
 
 data class ConteudoEducacional(var nome: String? = null, val duracao: Int = 60){
-    fun getConteudoEducacional(){
+    fun getConteudoEducacional(){												//Retorna os dados de um Conteudo educacional
         println("$nome durara $duracao Horas")
     }
 }
@@ -28,8 +28,8 @@ data class Formacao(var nome: String? = null, var conteudos: List<ConteudoEducac
         conteudos = conteudos.filter {it.nome != null}  		
     }
     
-    val inscritos = mutableMapOf<Usuario, Pair<Nivel, List<ConteudoEducacional>>>()
-    fun matricular(usuario: Usuario? = null) {
+    var inscritos = mutableMapOf<Usuario, Pair<Nivel, List<ConteudoEducacional>>>()
+    fun matricular(usuario: Usuario? = null) {										//Matricula um usuario novo na formação
     	// TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")                   
         nome?.let{
             usuario?.let{            
@@ -40,12 +40,29 @@ data class Formacao(var nome: String? = null, var conteudos: List<ConteudoEducac
                     else -> Nivel.INEXISTENTE
                 }            
                 inscritos[usuario] = nivel to conteudos
-                println(inscritos)          
+                         
             }  
         }                          
 	}
     
-    fun getFormacao(){
+    fun getMatriculados(){     												//Retorna todos que estão matriculados
+        inscritos.forEach{
+        	inscrito -> print("[${inscrito.key.nome} matricula: $nome] ")
+        }
+        
+        println("")
+    }
+    
+    
+    fun desmatricular(usuario: Usuario? = null) {      						//Retira um usuario da formação
+        nome?.let{
+            usuario?.let{                 
+               inscritos = inscritos.filter { it.key != usuario}.toMutableMap()                
+            }
+        }
+    }
+    
+    fun getFormacao(){														//Retorna a formação e seu conteúdo
         val conteudosNome = conteudos.map{it.nome}
         println("$nome conteudo: $conteudosNome")
     }
@@ -117,9 +134,15 @@ fun main() {
     fundamental.matricular(carlos)											//Criando a matricula corretamente
     medio.matricular(arthur)
     faculdade.matricular(vitor)
+    faculdade.matricular(carlos)											//Matriculando um segundo aluno na formação
     
-    semNome.matricular(carlos)												//Criando a matricula em uma formação invalida
+    semNome.matricular(carlos)												//Criando a matricula em uma formação invalida    
+    fundamental.matricular()												//Criando a matricula sem enviar o nome
     
-    fundamental.matricular()												//Criando a matricula sem enviar o nome    
+    faculdade.getMatriculados()												//Retornando valor dos alunos matriculados na formação    
+    
+    faculdade.desmatricular(carlos)											//Implementado a função desmatricular da formação    
+    faculdade.getMatriculados()												//Retornando a lista de matriculados após usado a função de desmatricular
+    
 }
 
